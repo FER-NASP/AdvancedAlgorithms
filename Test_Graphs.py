@@ -1,11 +1,11 @@
 import unittest
 from TwoMSTTravelingSalesman import TwoMSTTSP
 from BellmanFord import BellmanFord,BellmanFordFast
-from General import RevPath,FindCycles
+from General import RevPath,FindCycles,GenerateRandomMatrix,RevWFI,GenerateRandomCompleteUndirectedGraph,FindCycleWithWeightsMatrix
 from BFS_Iterative import BFS
 from BlockSearch import BlockSearch
 from DFS import DFS,DFSIterative
-from Dijkstra import Dijkstra,DijkstraMSTUndirected
+from Dijkstra import Dijkstra,DijkstraMSTUndirected,DijkstraMSTUndirectedMatrix
 from EdmondsKarp import EdmondsKarp
 from EulerianCircuits import Fleury,Hierholzer,Eulerization,IsEulerianCircuit
 import copy
@@ -13,6 +13,7 @@ from Kruskal import KruskalUndirected
 from Prim import Prim
 from SCCSearch import SCCSearch
 from WFI import WFI
+from random import randint
 
 class SimpleBinaryTreeCases(unittest.TestCase):
     def test_2MSTTS(self):
@@ -111,16 +112,48 @@ class SimpleBinaryTreeCases(unittest.TestCase):
             }
         D=Dijkstra(G,'d','g')
         DRP=RevPath(D,'g')
-        #print(DRP)
-        G2={'a': {'a':0,'b':6,'c':5,'d':0,'e':0,'f':0,'g':0},
-            'b': {'a':6,'b':0,'c':9,'d':0,'e':13,'f':0,'g':0},
-            'c': {'a':5,'b':9,'c':0,'d':16,'e':0,'f':12,'g':0},
-            'd': {'a':0,'b':0,'c':16,'d':0,'e':15,'f':7,'g':0},
-            'e': {'a':0,'b':13,'c':0,'d':15,'e':0,'f':0,'g':8},
-            'f': {'a':0,'b':0,'c':12,'d':7,'e':0,'f':0,'g':3},
-            'g': {'a':0,'b':0,'c':0,'d':0,'e':8,'f':3,'g':0}}
-        MST=DijkstraMSTUndirected(G2)
-        #print(MST)
+        print(DRP)
+        #G2={'a': {'a':0,'b':6,'c':5,'d':0,'e':0,'f':0,'g':0},
+        #    'b': {'a':6,'b':0,'c':9,'d':0,'e':13,'f':0,'g':0},
+        #    'c': {'a':5,'b':9,'c':0,'d':16,'e':0,'f':12,'g':0},
+        #    'd': {'a':0,'b':0,'c':16,'d':0,'e':15,'f':7,'g':0},
+        #    'e': {'a':0,'b':13,'c':0,'d':15,'e':0,'f':0,'g':8},
+        #    'f': {'a':0,'b':0,'c':12,'d':7,'e':0,'f':0,'g':3},
+        #    'g': {'a':0,'b':0,'c':0,'d':0,'e':8,'f':3,'g':0}}
+        G={'a':{'a':0, 'b':2, 'c':3, 'd':0},
+            'b':{'a':2, 'b':0, 'c':5, 'd':0},
+            'c':{'a':3, 'b':5, 'c':0, 'd':0},
+            'd':{'a':0, 'b':0, 'c':0, 'd':0}}
+        print(FindCycleWithWeightsMatrix(G))
+        G2={'a':{'a':0, 'b':2, 'c':5, 'd':6},
+            'b':{'a':2, 'b':0, 'c':3, 'd':4},
+            'c':{'a':5, 'b':3, 'c':0, 'd':7},
+            'd':{'a':6, 'b':4, 'c':7, 'd':0}}
+        G3=copy.deepcopy(G2)
+        MST1=DijkstraMSTUndirected(G2)
+        MST2=DijkstraMSTUndirectedMatrix(G3)
+        print(MST1)
+        print(MST2)
+        print("-------")
+        x,nodes=20,[]
+        for ch in range(97,97+x+1): nodes.append(chr(ch))
+        G4=GenerateRandomCompleteUndirectedGraph(nodes)
+        lc=0
+        while lc<100:
+            try:
+                DijkstraMSTUndirectedMatrix(G4,True)
+                break
+            except RuntimeError:
+                print("Update, step {}".format(lc+1))
+                lc=lc+1
+        if lc>=100: raise RuntimeError("Cannot generate random graph")
+        for u in G4:
+            print("{}:{}".format(u,G4[u]))
+        G5=copy.deepcopy(G4)
+        MST1=DijkstraMSTUndirected(G4)
+        MST2=DijkstraMSTUndirectedMatrix(G5)
+        for u in MST2:
+            print("{}:{}".format(u,MST2[u]))
 
     def test_EdmondsKarp(self):
         G1={'s1': {'s1':0,'v1':10,'v2':5,'v3':8,'v4':0,'d1':0},
@@ -273,15 +306,19 @@ class SimpleBinaryTreeCases(unittest.TestCase):
         #print(RevWFI(P,'b','h'))
         #print(RevWFI(P,'c','g'))
         #print(RevWFI(P,'c','h'))
-        #print(RevWFI(P,'g','h'))
+        print(RevWFI(P,'g','h'))
 
     def test_WFI2(self):
-        G= {'a': {'a':0,'b':0,'c':4,'d':0,'e':0},
-            'b': {'a':1,'b':0,'c':0,'d':3,'e':2},
-            'c': {'a':0,'b':-1,'c':0,'d':11,'e':0},
-            'd': {'a':7,'b':0,'c':0,'d':0,'e':3},
-            'e': {'a':1,'b':0,'c':0,'d':0,'e':0}}
-        (D,P)=WFI(G)
+        #G= {'a': {'a':0,'b':0,'c':4,'d':0,'e':0},
+        #    'b': {'a':5,'b':0,'c':0,'d':3,'e':2},
+        #    'c': {'a':0,'b':-1,'c':0,'d':11,'e':0},
+        #    'd': {'a':7,'b':0,'c':0,'d':0,'e':3},
+        #    'e': {'a':1,'b':-2,'c':12,'d':0,'e':0}}
+        W={'a':{'a':0, 'b':2, 'c':0, 'd':0},
+            'b':{'a':0, 'b':0, 'c':3, 'd':-1},
+            'c':{'a':-1, 'b':0, 'c':0, 'd':7},
+            'd':{'a':3, 'b':0, 'c':0, 'd':0}}
+        (D,P)=WFI(W)
         print(D)
         print(P)
         #print(D['b']['c'])
@@ -291,12 +328,24 @@ class SimpleBinaryTreeCases(unittest.TestCase):
         #print(D['c']['h'])
         #print(D['g']['h'])
         #print('***')
-        #print(RevWFI(P,'b','c'))
+        print(RevWFI(P,'a','d'))
         #print(RevWFI(P,'b','g'))
         #print(RevWFI(P,'b','h'))
         #print(RevWFI(P,'c','g'))
         #print(RevWFI(P,'c','h'))
         #print(RevWFI(P,'g','h'))
+
+    def test_WFI3(self):
+        x,nodes=20,[]
+        for ch in range(97,97+x+1): nodes.append(chr(ch))
+        s=randint(97,97+x)
+        G=GenerateRandomMatrix(nodes,chr(s))
+        t=s
+        while t==s: t=randint(97,97+x)
+        (D,P)=WFI(G)
+        print(D)
+        print(P)
+        print(list(reversed(RevWFI(P,chr(s),chr(t)))))
 
 if __name__ == '__main__':
     unittest.main()

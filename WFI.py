@@ -16,4 +16,3 @@ def WFI(G):
                     D[i][j]=D[i][k]+D[k][j]
                     P[i][j]=P[k][j]
     return (D,P)
-

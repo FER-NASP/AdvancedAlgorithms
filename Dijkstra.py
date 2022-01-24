@@ -38,3 +38,31 @@ def DijkstraMSTUndirected(G):
                 e2=me[0]
                 MST[e2[0]][e2[1]]=MST[e2[1]][e2[0]]=0
     return MST
+
+def DijkstraMSTUndirectedMatrix(G,update=False):
+    MST=NewAdjMatrix(G)
+    updated=False
+    for u in G:
+        for v in G[u]:
+            if G[u][v]!=0 and MST[u][v]==0:
+                MST[u][v]=MST[v][u]=G[u][v]
+                E=FindCycleWithWeightsMatrix(MST)
+                if E:
+                    me=max(E.items(),key=lambda x:x[1])
+                    if me:
+                        e2=me[0]
+                        if update:
+                            clear=False
+                            while not clear:
+                                clear=True
+                                for e in E:
+                                    if E[e2]==E[e] and e is not e2:
+                                        G[e[0]][e[1]]=G[e[1]][e[0]]=E[e2]+1
+                                        MST[e[0]][e[1]]=MST[e[1]][e[0]]=E[e2]+1
+                                        E[e]=E[e2]+1
+                                        e2=e
+                                        clear,updated=False,True
+                                        break
+                        MST[e2[0]][e2[1]]=MST[e2[1]][e2[0]]=0
+    if update and updated: raise RuntimeError("Updated")
+    return MST
