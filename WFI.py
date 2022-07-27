@@ -15,4 +15,5 @@ def WFI(G):
                 if D[i][k]+D[k][j]<D[i][j]:
                     D[i][j]=D[i][k]+D[k][j]
                     P[i][j]=P[k][j]
+        print(D)
     return (D,P)

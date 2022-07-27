@@ -1,9 +1,11 @@
 from Dijkstra import DijkstraMSTUndirected
 from EulerianCircuits import Eulerization, Hierholzer, Fleury
+from Kruskal import KruskalUndirected
 import copy
 
 def TwoMSTTSP(G,s):
-    Gmst=DijkstraMSTUndirected(copy.deepcopy(G))
+    #Gmst=DijkstraMSTUndirected(copy.deepcopy(G))
+    Gmst=KruskalUndirected(copy.deepcopy(G))
     GEmst=Eulerization(Gmst)
     Ce=Hierholzer(GEmst,s)
     #Ce=Fleury(GEmst,s) #we cannot use Fleury here, as it uses the BlockSearch algorithm that does not work with
