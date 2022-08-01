@@ -1,23 +1,28 @@
+
 class TrieNode:
     def __init__(self,p=None):
-        self.children={}
+        self.children=[]
         self.parent=p
+
+class TrieNode(TrieNode):
     def isLeaf(self) -> (bool):
         return len(self.children)==0
-    def transition(self,c:chr) -> (bool,object):
-        if c in self.children: return (True,self.children[c])
+    def transition(self,c:chr) -> (bool,TrieNode):
+        for (ct,cn) in self.children:
+            if c==ct:
+                return (True,cn)
         return (False,None)
-    def insert(self,c:chr) -> (object):
+    def insert(self,c:chr) -> (TrieNode):
         (ct,cn)=self.transition(c)
         if not ct:
             ncn=TrieNode(self)
-            self.children[c]=ncn
+            self.children.append((c,ncn))
             return ncn
         else: return cn
     def remove(self,c:chr) -> (bool):
         (ct,cn)=self.transition(c)
         if ct:
-            del self.children[c]
+            self.children.remove((c,cn))
             return True
         return False
 
@@ -45,6 +50,8 @@ class Trie:
                 currTN.remove(c)
                 if split: break
                 currTN=currTN.parent
-                if currTN is None: break
+                if currTN is None: break # we are at the root node
             return True
         return False
+
+

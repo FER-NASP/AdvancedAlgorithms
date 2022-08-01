@@ -1,5 +1,6 @@
 import unittest
 from Trie import Trie
+from PatriciaTree import PatriciaTree
 
 class SimpleStringCases(unittest.TestCase):
     def test_Trie(self):
@@ -10,6 +11,16 @@ class SimpleStringCases(unittest.TestCase):
         t.insert("ana")
         t.remove("dado")
         self.assertTrue(t.search("da"))
+
+    def test_PatriciaTree1(self):
+        pt=PatriciaTree()
+        pt.insert("analisys")
+        pt.insert("acronym")
+        b1=pt.search('ana')
+        pt.insert("analogy")
+        pt.insert("acrobat")
+        pt.insert("ana")
+        self.assertTrue(not b1 and pt.search('ana'))
 
 if __name__ == '__main__':
     unittest.main()
