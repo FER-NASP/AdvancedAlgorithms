@@ -10,7 +10,7 @@ class SimpleStringCases(unittest.TestCase):
         t.insert("dalibor")
         t.insert("ana")
         t.remove("dado")
-        self.assertTrue(t.search("da"))
+        self.assertTrue(t.search('dado'))
 
     def test_PatriciaTree1(self):
         pt=PatriciaTree()
@@ -21,6 +21,20 @@ class SimpleStringCases(unittest.TestCase):
         pt.insert("acrobat")
         pt.insert("ana")
         self.assertTrue(not b1 and pt.search('ana'))
+
+    def test_PatriciaTree2(self):
+        pt=PatriciaTree()
+        pt.insert("analisys")
+        pt.insert("acronym")
+        pt.insert("analogy")
+        pt.insert("acrobat")
+        pt.insert("ana")
+        pt.remove('analisys')
+        pt.remove('analogy')
+        pt.remove('ana')
+        pt.remove('acronym')
+        pt.remove('acrobat')
+        self.assertTrue(not pt.search('analisys'))
 
 if __name__ == '__main__':
     unittest.main()

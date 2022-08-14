@@ -1,63 +1,97 @@
 class PatriciaTreeNode:
     def __init__(self, s: str, p: int, l: int):
         self.s, self.p, self.l = s, p, l
-        self.children = []
+        self.children = [None] * 256 #sigma=ascii
+        self.cno, self.parent = 0, None
     def isLeaf(self) -> (bool):
-        return len(self.children) == 0
+        return self.cno == 0
+    def transition(self, c: chr) -> (object):
+        return self.children[ord(c)]
+    def insert(self, cnc: object):
+        if self.children[ord(cnc.s[cnc.p])] is None:
+            self.cno += 1
+        cnc.parent = self
+        self.children[ord(cnc.s[cnc.p])] = cnc
+    def remove(self, cnc: object):
+        child = self.children[ord(cnc.s[cnc.p])]
+        if child is not None:
+            child.parent = None
+            self.cno -= 1
+            self.children[ord(cnc.s[cnc.p])] = None
+    def checkChildren(self):
+        if self.cno > 0:
+            for i in range(0,255):
+                if self.children[i] is not None:
+                    return (self.cno == 1, self.children[i])
+        return (False, None)
     def __str__(self):
         return self.s[self.p:self.p+self.l]
 
 
 class PatriciaTree:
     def __init__(self):
-        self.root = PatriciaTreeNode('', 0, 0)
-    def search(self, q: str):
+        self.root = PatriciaTreeNode(None, 0, 0)
+    def search(self, q: str) -> (bool):
+        (succ, cn) = self._search(q)
+        return succ
+    def _search(self, q: str) -> (bool):
         q = q + '$'
         q_p, q_l = 0, len(q)
         sc = 0  # Python starts strings from 0
         cn = self.root
         while not cn.isLeaf():
-            cmatch = False
-            for cnc in cn.children:
+            cnc = cn.transition(q[sc])
+            if cnc is not None:
                 t_p, t_l = cnc.p, cnc.l
                 if q[sc:sc + t_l] == cnc.s[t_p:t_p + t_l]:
                     sc, cn = sc + t_l, cnc
-                    cmatch = True
-                    break
-            if not cmatch: return False
-        return sc == q_l
+                else: return (False, None)
+            else: return (False, None)
+        return (sc == q_l, cn)
     def insert(self, s: str):
-        s=s+'$'
+        s = s + '$'
         s_p, s_l = 0, len(s)
         sc = 0 # Python starts strings from 0
         cn = self.root
-        while not cn.isLeaf():
-            nfound = True
-            for cnc in cn.children:
-                case = 3
+        while cn==self.root or not cn.isLeaf():
+            c = s[sc]
+            cnc = cn.transition(c)
+            if cnc is not None:
                 t_p, t_l = cnc.p, cnc.l
-                for i in range(0, t_l):
-                    if s[sc + i] != cnc.s[cnc.p + i]:
-                        if i == 0: case = 1
-                        else: case = 2
-                        break
-                if case == 3:
+                if s[sc:sc + t_l] == cnc.s[t_p:t_p + t_l]: #case 3
                     cn,sc=cnc,sc+t_l
-                    nfound=False
-                    break
-                elif case == 2:
-                    cn.children.remove(cnc)
+                else: #case 2
+                    #the first char is always matched
+                    for i in range(1, t_l):
+                        if s[sc + i] != cnc.s[cnc.p + i]: break
                     cnins=PatriciaTreeNode(cnc.s,cnc.p,i)
                     cnc.p,cnc.l=cnc.p+i,cnc.l-i
-                    cn.children.append(cnins)
-                    cnins.children.append(cnc)
+                    cn.insert(cnins)
+                    cnins.insert(cnc)
                     cnleaf=PatriciaTreeNode(s,sc+i,s_l-sc-i)
-                    cnins.children.append(cnleaf)
+                    cnins.insert(cnleaf)
                     return
-            if nfound: break
-        if sc<s_l:
-            cnleaf=PatriciaTreeNode(s,sc,s_l-sc)
-            cn.children.append(cnleaf)
-
-
-
+            else: #case 1
+                cnleaf=PatriciaTreeNode(s,sc,s_l-sc)
+                cn.insert(cnleaf)
+                return
+    def remove(self, s: str):
+        (succ, cnleaf) = self._search(s)
+        if not succ: return
+        os = cnleaf.s
+        cn = cnleaf.parent
+        if cn is not None:
+            cn.remove(cnleaf)
+            (single, firstChild) = cn.checkChildren()
+            if single and cn.parent is not None:
+                cnpp = cn.parent
+                cnpp.remove(cn)
+                firstChild.p -= cn.l
+                firstChild.l += cn.l
+                cnpp.insert(firstChild)
+            if firstChild is not None:
+                cn = firstChild
+                while cn.parent is not None:
+                    if cn.parent.s == os:
+                        cn.parent.s = cn.s
+                    cn = cn.parent
