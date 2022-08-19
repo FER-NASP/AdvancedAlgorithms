@@ -206,3 +206,44 @@ def GenerateRandomCompleteUndirectedGraph(nodes:list) -> dict:
             ui,vi=nodes.index(u),nodes.index(v)
             if vi>ui: G[u][v]=G[v][u]=randint(0,20)
     return G
+
+class StringPL:
+    def __init__(self, s: str, p: int=0, l: int=None):
+        self.s, self.p = s, p
+        if l is None: self.l = len(s)
+        else: self.l = l
+        if self.s is not None and self.p>len(self.s): raise 'cloning position greater than the length of the string'
+        if self.s is not None and self.p+self.l>len(self.s): raise 'cloning position+length greater than the length of the string'
+    def substring(self) -> (str):
+        return self.s[self.p:self.p + self.l]
+    def indexSubstring(self, tp:int, tl:int) -> (str):
+        return self[tp:tp+tl]
+    def clone(self, tp:int, tl:int) -> (object):
+        if self.s is None: return StringPL(None, 0, 0)
+        if tp>len(self.s): raise 'cloning position greater than the length of the string'
+        if tp+tl>len(self.s): raise 'cloning position+length greater than the length of the string'
+        return StringPL(self.s, tp, tl)
+    def __getitem__(self, item):
+        if self.s is None: return None
+        if isinstance(item, slice):
+            return self.s[item.start:item.stop]
+        else:
+            if item>len(self): raise 'item position greater than the length of the string'
+            return self.substring()[item]
+    def __len__(self):
+        return self.l
+    def __str__(self):
+        return self.substring()
+    def __lt__(self, other):
+        return self.substring() < other.substring()
+    def lcp(self, other):
+        l = 0
+        ss = self.substring()
+        if isinstance(other, str): os = other
+        else: os = other.substring()
+        for i in range(0, min(len(ss), len(os))):
+            if ss[i] == os[i]:
+                l = l + 1
+            else:
+                break
+        return l
