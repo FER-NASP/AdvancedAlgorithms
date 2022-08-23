@@ -32,7 +32,7 @@ class SuffixTree:
                     return (True, None)
             else: return (False, None)
         return (sc == q_l, cn)
-    def insert(self, s: str):
+    def insert(self, s: str): # implementation of the Ukkonen's algorithm
         spl = StringPL(s)
         for i in range(0,len(spl)):
             self._insert1(spl.clone(0, i), spl[i])
