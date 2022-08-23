@@ -3,6 +3,7 @@ from Trie import Trie
 from PatriciaTree import PatriciaTree
 from SuffixArray import SuffixArray,StringArray
 from General import StringPL
+from SuffixTree import SuffixTree
 
 class SimpleStringCases(unittest.TestCase):
     def test_Trie(self):
@@ -61,6 +62,15 @@ class SimpleStringCases(unittest.TestCase):
         sa=StringArray(arr)
         res = sa.search('protection$')
         self.assertTrue(res)
+
+    def test_SuffixTree1(self):
+        st = SuffixTree()
+        st.insert('ABABABCDCDE')
+        s1 = st.search('BCD')
+        s2 = st.search('BCE')
+        s3 = st.search('ACD')
+        s4 = st.search('DCD')
+        self.assertTrue(s1 and not s2 and not s3 and s4)
 
 if __name__ == '__main__':
     unittest.main()

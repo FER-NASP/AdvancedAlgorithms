@@ -217,7 +217,7 @@ class StringPL:
     def substring(self) -> (str):
         return self.s[self.p:self.p + self.l]
     def indexSubstring(self, tp:int, tl:int) -> (str):
-        return self[tp:tp+tl]
+        return self.s[tp:tp+tl]
     def clone(self, tp:int, tl:int) -> (object):
         if self.s is None: return StringPL(None, 0, 0)
         if tp>len(self.s): raise 'cloning position greater than the length of the string'
@@ -226,7 +226,7 @@ class StringPL:
     def __getitem__(self, item):
         if self.s is None: return None
         if isinstance(item, slice):
-            return self.s[item.start:item.stop]
+            return self.s[item.start+self.p:item.stop+self.p]
         else:
             if item>len(self): raise 'item position greater than the length of the string'
             return self.substring()[item]
@@ -247,3 +247,6 @@ class StringPL:
             else:
                 break
         return l
+    def append(self, c: chr):
+        self.s = self.s + c
+        self.l = self.l + 1
