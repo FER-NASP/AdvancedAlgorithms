@@ -1,7 +1,7 @@
 from General import StringPL
-from PatriciaTree import StringTreeNode
+from PatriciaTree import PatriciaTreeNode
 
-class SuffixTreeNode(StringTreeNode):
+class SuffixTreeNode(PatriciaTreeNode):
     def __init__(self, str: StringPL, leaf: bool):
         self.str = str
         self.children = [None] * 256 #sigma=ascii

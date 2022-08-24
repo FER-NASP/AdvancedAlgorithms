@@ -1,6 +1,6 @@
 from General import StringPL
 
-class StringTreeNode:
+class PatriciaTreeNode:
     def __init__(self, str: StringPL, leaf: bool):
         self.str = str
         self.children = [None] * 256 #sigma=ascii
@@ -38,7 +38,7 @@ class StringTreeNode:
 
 class PatriciaTree:
     def __init__(self):
-        self.root = StringTreeNode(StringPL(None, 0, 0), False)
+        self.root = PatriciaTreeNode(StringPL(None, 0, 0), False)
     def search(self, q: str) -> (bool):
         (succ, cn) = self._search(q)
         return succ
@@ -72,15 +72,15 @@ class PatriciaTree:
                     #the first char is always matched
                     for i in range(1, t_l):
                         if s[sc + i] != cnc.str[cnc.str.p + i]: break
-                    cnins=StringTreeNode(cnc.str.clone(cnc.str.p, i), False)
+                    cnins=PatriciaTreeNode(cnc.str.clone(cnc.str.p, i), False)
                     cnc.str.p,cnc.str.l=cnc.str.p+i,cnc.str.l-i
                     cn.insert(cnins)
                     cnins.insert(cnc)
-                    cnleaf=StringTreeNode(StringPL(s, sc + i, s_l - sc - i), True)
+                    cnleaf=PatriciaTreeNode(StringPL(s, sc + i, s_l - sc - i), True)
                     cnins.insert(cnleaf)
                     return
             else: #case 1
-                cnleaf=StringTreeNode(StringPL(s, sc, s_l - sc), True)
+                cnleaf=PatriciaTreeNode(StringPL(s, sc, s_l - sc), True)
                 cn.insert(cnleaf)
                 return
     def remove(self, s: str):
