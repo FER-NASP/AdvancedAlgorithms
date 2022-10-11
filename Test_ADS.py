@@ -33,7 +33,7 @@ class SimpleBinaryTreeCases(unittest.TestCase):
         bt.insert(11)
         self.assertIs(bt.query(11) is not None,bt.query(12) is None)
 
-    def test_SimpleBinaryTreeBalance(self):
+    def test_SimpleBinaryTreeBalance1(self):
         bt=SimpleBinaryTree()
         bt.insert(12)
         bt.insert(8)
@@ -44,6 +44,18 @@ class SimpleBinaryTreeCases(unittest.TestCase):
         bt.insert(17)
         bt.insert(13)
         self.assertTrue(bt.isBalanced() is False)
+
+    def test_SimpleBinaryTreeBalance2(self):
+        bt=SimpleBinaryTree()
+        bt.insert(12)
+        bt.insert(8)
+        bt.insert(4)
+        bt.insert(9)
+        bt.insert(17)
+        bt.insert(14)
+        bt.insert(21)
+        bt.insert(20)
+        self.assertTrue(bt.isBalanced() is True)
 
     def test_RemoveSimpleBinaryTree(self):
         bt=SimpleBinaryTree()
