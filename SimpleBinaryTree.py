@@ -87,6 +87,13 @@ class Node:
         if self.R is not None:
             r=self.R.h
         return r-l
+    def isBalanced(self):
+        dL,dR=0,0
+        if self.L is not None:
+            dL=self.L.depth()
+        if self.R is not None:
+            dR=self.R.depth()
+        return abs(dL-dR)<2 and (self.L is None or self.L.isBalanced()) and (self.R is None or self.R.isBalanced())
 
 class SimpleBinaryTree:
     root=None
@@ -101,12 +108,7 @@ class SimpleBinaryTree:
         if self.root is None:
             return True
         else:
-            dL,dR=0,0
-            if self.root.L is not None:
-                dL=self.root.L.depth()
-            if self.root.R is not None:
-                dR=self.root.R.depth()
-            return abs(dL-dR)<2
+            return self.root.isBalanced()
     def query(self,v):
         if self.root is None: return None
         else:
