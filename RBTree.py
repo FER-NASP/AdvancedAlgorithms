@@ -31,9 +31,9 @@ class RBTree(SimpleBinaryTree):
                     G.color=tmp
                 else:
                     if case=='LR':
-                        P.rightrotate(self)
-                    else:
                         P.leftrotate(self)
+                    else:
+                        P.rightrotate(self)
                     n=P
             P,G=n.P,None
             if P is not None: G=P.P
