@@ -65,7 +65,7 @@ class SuffixArray:
             return False
 
 class StringArray(SuffixArray):
-    def __init__(self, arr): #this is not a suffix array, we cannot use thos fancy linear algorithms
+    def __init__(self, arr): #this is not a suffix array, we cannot use those fancy linear algorithms
         self.n = len(arr)
         self.SA = arr
         self.l = [[0]*self.n for i in range(self.n)]
